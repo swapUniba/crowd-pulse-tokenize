@@ -4,6 +4,8 @@ import com.github.frapontillo.pulse.crowd.data.entity.Message;
 import com.github.frapontillo.pulse.crowd.data.entity.Token;
 import com.github.frapontillo.pulse.rx.PulseSubscriber;
 import com.github.frapontillo.pulse.spi.IPlugin;
+import com.github.frapontillo.pulse.util.PulseLogger;
+import org.apache.logging.log4j.Logger;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -16,6 +18,9 @@ import java.util.List;
  * @author Francesco Pontillo
  */
 public abstract class ITokenizer extends IPlugin<Message, Message, TokenizerConfig> {
+
+    private final static Logger logger = PulseLogger.getLogger(ITokenizer.class);
+
     @Override public TokenizerConfig getNewParameter() {
         return new TokenizerConfig();
     }
@@ -32,7 +37,21 @@ public abstract class ITokenizer extends IPlugin<Message, Message, TokenizerConf
 
                     @Override public void onNext(Message message) {
                         reportElementAsStarted(message.getId());
-                        message = tokenize(message, cleaner);
+                        switch (parameters.getCalculate()) {
+                            case TokenizerConfig.ALL:
+                                message = tokenize(message, cleaner);
+                                break;
+                            case TokenizerConfig.NEW:
+                                if (message.getTokens() == null || message.getTokens().size() == 0) {
+                                    message = tokenize(message, cleaner);
+                                } else {
+                                    logger.info("Message skipped (tokenization already done)");
+                                }
+                                break;
+                            default:
+                                message = tokenize(message, cleaner);
+                                break;
+                        }
                         reportElementAsEnded(message.getId());
                         subscriber.onNext(message);
                     }

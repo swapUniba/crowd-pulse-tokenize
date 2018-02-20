@@ -14,12 +14,25 @@ import java.util.List;
  * @author Francesco Pontillo
  */
 public class TokenizerConfig implements IPluginConfig<TokenizerConfig> {
+
+    /**
+     * Tokenize all messages coming from the stream.
+     */
+    public static final String ALL = "all";
+
+    /**
+     * Tokenize the messages with no tokens (property is null).
+     */
+    public static final String NEW = "new";
+
+
     private Integer minChars;
     private boolean urls;
     private boolean hashtags;
     private boolean mentions;
     private boolean numbers;
     private List<String> regexes;
+    private String calculate;
 
     @Override public TokenizerConfig buildFromJsonElement(JsonElement json) {
         return PluginConfigHelper.buildFromJson(json, TokenizerConfig.class);
@@ -73,4 +86,11 @@ public class TokenizerConfig implements IPluginConfig<TokenizerConfig> {
         this.regexes = regexes;
     }
 
+    public String getCalculate() {
+        return calculate;
+    }
+
+    public void setCalculate(String calculate) {
+        this.calculate = calculate;
+    }
 }
