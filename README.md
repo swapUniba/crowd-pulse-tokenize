@@ -4,8 +4,8 @@ crowd-pulse-tokenize
 Generic Crowd Pulse message tokenizer.
 
 You have to specify the configuration option "calculate" with one of the following values:
-- all: to calculate the sentiment of all messages coming from the stream;
-- new: to calculate the sentiment of the messages with no sentiment (property is null);
+- all: tokenize all messages coming from the stream;
+- new: tokenize the messages with no tokens (property is null).
 
 Example of usage:
 
@@ -35,7 +35,7 @@ Example of usage:
     "message-persister": {
       "plugin": "message-persist",
       "config": {
-        "db": "test-sentiment"
+        "db": "test"
       }
     }
   },
